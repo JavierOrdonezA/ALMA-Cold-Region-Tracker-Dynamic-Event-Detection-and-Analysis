@@ -41,41 +41,6 @@ This tracking process is performed both forward and backward in time, starting f
 
 - **Local Minima Detection**: Performed using the `peak_local_max` function with a minimum distance of zero and local minima below the average temperature.
 
-
-
-
-
-
-
-
-
-## Example Usage
-
-### Event Tracking and Local Minima Detection
-
-```python
-from alma_processor import ALMADataProcessor
-
-# Initialize the processor with the path to ALMA data
-processor = ALMADataProcessor('/path/to/alma/file.fits')
-
-# Detect local minima in the ALMA data
-vector_minima = processor.detect_local_extrema(sigma_criterion=0)
-
-# Filter and track the event across frames starting from frame 100
-tracked_points = processor.filter_points(vector_minima, frame=100, distance_threshold=5)
-
-# Compute the trajectory of the event over time
-all_local_min, total_index = processor.compute_trajectory(tracked_points[0], 100, 5, vector_minima, [0, 200])
-
-
-
-
-
-
-
-
-
 ## Example Usage
 
 ### Event Tracking and Local Minima Detection
