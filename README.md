@@ -45,23 +45,11 @@ This tracking process is performed both forward and backward in time, starting f
 
 ### Event Tracking and Local Minima Detection
 
+Cold regions were identified based on their lower brightness temperatures, as shown in **panel (c) of Figure 3-3**. To differentiate cold from warm regions, a temperature threshold was set at the mean brightness temperature, including approximately 45% of the pixels (see red line in **panel (a)**).
 
+The spatial resolution of ALMA was determined by calculating the average beam area. The radius of a circle with an area equal to the ALMA beam was used to establish a minimum distance between events. This radius is shown by the red line in **panel (b)**.
 
-
-The methodology used to identify and track cold regions in ALMA data involves both a qualitative and quantitative analysis of brightness temperature variations. Cold regions were identified based on their lower brightness temperatures, in contrast to the warmer areas, as shown in **panel (c) of Figure 3-3**.
-
-#### 1. Qualitative and Quantitative Analysis
-The initial qualitative inspection identified dark regions based on their relative brightness temperature, providing a first-level selection of the cold regions. Following this, a quantitative analysis was performed to establish a temperature threshold that clearly distinguishes cold regions from warmer areas. The mean and standard deviation of the brightness temperature in the D06 region (see **panel (a) of Figure 3-3**) were calculated.
-
-#### 2. Temperature Threshold and Cold Region Selection
-Based on the temperature distribution, it was determined that using a threshold of two standard deviations below the mean would exclude approximately 99.5% of the pixels, which was too restrictive. A threshold of one standard deviation excluded 90% of the pixels, also limiting. Therefore, the chosen threshold was the **mean temperature**, which included approximately 45% of the pixels, as shown by the red line in **panel (a)**.
-
-#### 3. Spatial Resolution and Minimum Distance Criteria
-To define the spatial resolution of ALMA and establish a distance threshold, the average beam area of ALMA was calculated, taking into account the major and minor axes of the beam ellipse. The radius of a circle whose area matched this average beam area was determined, and twice the diameter of this circle was adopted as the minimum distance required for two events to be considered resolved. The time series of this radius is illustrated in **panel (b) of Figure 3-3**, with the red line showing the average radius.
-
-#### 4. Cold Event Detection in the Region of Interest
-In **panel (c)**, a blue circle with a 33-arcsec radius encloses the area where cold regions were detected. This area was selected based on the calculated beam size, and events within this region were carefully tracked over time. Dark regions located at the edge of the field of view were excluded due to incomplete data.
-
+In **panel (c)**, the blue circle with a 33-arcsec radius encloses the area where cold regions were searched. Events within this area were tracked across frames, while those at the edges of the field of view were excluded.
 
 
 
