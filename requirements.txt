@@ -1,7 +1,28 @@
-# Astro libraries
-matplotlib        == 3.5.3
-matplotlib-inline == 0.1.6
-numpy             == 1.22.4
-numpydoc          == 1.5.0
-scikit-image      == 0.20.0
-seaborn           == 0.12.1
+# Astronomy-related libraries
+astropy           ~= 5.1
+radio_beam        ~= 0.3.3
+schwifty          ~= 2023.6.0
+
+# Scientific and numerical libraries
+numpy             ~= 1.22
+scipy             ~= 1.8
+scikit-image      ~= 0.20
+
+# Visualization libraries
+matplotlib~=3.5
+matplotlib-inline~=0.1
+seaborn~=0.12
+
+# Documentation libraries
+numpydoc~=1.5
+
+# Auxiliary libraries
+tqdm~=4.64
+
+# Astronomical and scientific libraries
+numpy~=1.22.4
+scikit-image~=0.20.0
+astropy~=5.3.4
+scipy~=1.10.1
+radio_beam~=0.3.7
+

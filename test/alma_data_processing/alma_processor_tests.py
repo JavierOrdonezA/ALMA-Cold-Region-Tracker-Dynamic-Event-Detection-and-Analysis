@@ -1,9 +1,14 @@
-# test/test_alma_processor.py
+"""Test Suite for ALMA Data Processor."""
 
-import pytest
+# Standard library imports
+from unittest.mock import patch
+
+# Third-party imports
 import numpy as np
-from unittest.mock import patch, MagicMock
-from src.data_prep.alma_processing import ALMADataProcessor
+import pytest
+
+# Local application imports
+from src.data_prep.alma_data_processing import ALMADataProcessor
 
 
 @pytest.fixture
@@ -22,7 +27,8 @@ def mock_alma_data():
 
 @pytest.fixture
 def alma_processor(mock_alma_data):
-    with patch('src.data_prep.alma_processing.salat.read', return_value=mock_alma_data):
+    with patch('src.data_prep.alma_data_processing.salat.read',
+               return_value=mock_alma_data):
         return ALMADataProcessor('dummy_file_path.fits')
 
 
