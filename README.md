@@ -31,6 +31,20 @@ The library tracks the event's position by comparing its coordinates across fram
 This tracking process is performed both forward and backward in time, starting from the event's frame, ensuring continuous tracking. For example, the library tracks an event from frame 100 to **frame 150** and interrupts the tracking if the distance between the event and the local minima exceeds the threshold in **frame 151**.
 
 
+# Inputs and Parameters
+
+## Event Tracking
+
+- **Frame Number** (*int*): The frame number in the observational data where the event is first identified.
+
+- **Distance Threshold** (*float*): The threshold distance between the event's position in the current frame and local minima in the next frame. If the distance exceeds this threshold, tracking is interrupted.
+
+- **Local Minima Detection**: Performed using the `peak_local_max` function with a minimum distance of zero and local minima below the average temperature.
+
+
+
+
+
 
 
 
