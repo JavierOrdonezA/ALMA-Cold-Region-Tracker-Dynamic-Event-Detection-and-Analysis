@@ -45,6 +45,9 @@ This tracking process is performed both forward and backward in time, starting f
 
 ### Event Tracking and Local Minima Detection
 
+![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/data_select_minimum.jpg)
+
+
 ```python
 from alma_processor import ALMADataProcessor
 import numpy as np
