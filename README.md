@@ -97,11 +97,37 @@ all_local_min, total_index = processor.compute_trajectory(
 ## Results
 
 
+![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/example_tracking.jpg)
+
+
 
 ## Conclusion
 This library allows users to perform detailed tracking of cold regions observed through ALMA by detecting local minima and following events over time. It provides valuable insights into the movement of these regions across frames, aiding in the analysis of dynamic solar events.
 
 
+## Future Directions
+Future updates may include an advanced alignment algorithm that considers projection effects, aiming to further refine the precision and applicability of this technique.
+
+## License
+This project is open source and available under the MIT License. This allows for modification, distribution, and private use.
+
+MIT License
+
+Copyright (c) [2024] [F. J. Ordonez Araujo, J. C Guevara Gomez]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Library"), to deal
+in the Library without restriction, including without limitation the rights
+to use, copy, modify, merge, distribute, and sublicense.
+
+
+
+## Citation
+
+For more details on the process, see:
+**Method article**: 'https://arxiv.org/abs/2404.04401',
+
+**Third chapter of my master's thesis** for more details than in the paper: 'https://repositorio.unal.edu.co/handle/unal/85838'.
 
 ---
 Feel free to explore the projects and their solutions in the respective directories.
