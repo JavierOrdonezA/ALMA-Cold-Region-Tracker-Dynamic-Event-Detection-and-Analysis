@@ -117,6 +117,8 @@ The blue points represent other local minima detected in the vicinity of the eve
 
 
 ## Application of the Methods 
+This method has proven to perform well for studying cold regions observed by **ALMA** in Band 3. The figure below shows temperature variations in time-distance diagrams, centered on the spatial coordinates obtained from the tracking method within a 6x6 arcsec window for six cold events.
+
 ![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/alma_time_distance_var.jpg)
 
 
