@@ -165,6 +165,8 @@ Feel free to explore the projects and their solutions in the respective director
 
 **J. C Guevara Gomez (juancamilo.guevaragomez@gmail.com)**
 
+Special thank to Alyona who assist me addressing CI/CD pipelines problems,
+
 **Alyona Carolina Ivanova-Araujo (alenacivanovaa@gmail.com )**
 
 ---
