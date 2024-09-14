@@ -100,7 +100,13 @@ all_local_min, total_index = processor.compute_trajectory(
 ## Results
 
 
+The figure below illustrates the temporal evolution of a dynamic cold region observed by **ALMA**. The event is tracked using local minima detected across multiple frames. In **frame 100** (corresponding to **UTC 15:54:12 on April 12, 2018**), the local minimum of the event is marked with a green star.
+
+- The panels labeled **t1** and **t2** show moments 90 and 50 seconds before the event in frame 100.
+- The panels **t4** and **t5** represent moments 30 and 70 seconds after the event, respectively.
+
 ![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/example_tracking.jpg)
+The blue points represent other local minima detected in the vicinity of the event. As time progresses, the event is tracked across multiple frames, and its movement is highlighted by the shifting position of the green star. The event is no longer detected in **t1** and **t5**, indicating that the local minimum exceeded the tracking threshold at these times.
 
 
 
