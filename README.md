@@ -104,8 +104,9 @@ This figure shows temperature variations in time-distance diagrams for six cold 
 
 ## Detailed Usage
 
-For more detailed usage instructions, including advanced features and customization options, please refer to the [Usage Guide](docs/usage_guide.md).
+For more detailed usage instructions, including advanced features and customization options, please take a look at the [Usage Guide](docs/usage_guide.md).
 
+<!---
 ## Examples
 
 We provide several examples demonstrating the library's capabilities:
@@ -113,6 +114,8 @@ We provide several examples demonstrating the library's capabilities:
 - [Basic Event Tracking](examples/basic_tracking.py)
 - [Multi-Event Analysis](examples/multi_event_analysis.py)
 - [Visualization of Trajectories](examples/trajectory_visualization.py)
+-->
+
 
 ## Contributing
 
