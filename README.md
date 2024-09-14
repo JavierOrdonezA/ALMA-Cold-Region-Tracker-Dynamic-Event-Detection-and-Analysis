@@ -43,6 +43,9 @@ This tracking process is performed both forward and backward in time, starting f
 
 ## Example Usage
 
+The ALMA data used for this analysis was obtained from the [Solar ALMA Science Archive (SALSA)](http://sdc.uio.no/salsa/) the D06 Observation of ALMA Band 3.
+
+
 ### Event Tracking and Local Minima Detection
 
 Cold regions were identified based on their lower brightness temperatures, as shown in **panel (c) of Figure below**. To differentiate cold from warm regions, a temperature threshold was set at the mean brightness temperature, including approximately 45% of the pixels (see red line in **panel (a)**).
