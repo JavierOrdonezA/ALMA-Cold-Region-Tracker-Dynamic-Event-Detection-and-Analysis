@@ -117,7 +117,6 @@ The blue points represent other local minima detected in the vicinity of the eve
 
 
 ## Application of the Methods 
-![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/region_alma_iris_1600.jpg)
 ![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/alma_time_distance_var.jpg)
 
 
