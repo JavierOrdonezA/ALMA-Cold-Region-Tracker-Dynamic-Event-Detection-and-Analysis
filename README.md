@@ -78,6 +78,7 @@ selected_point = points_data_track[minimum_num].copy()
 
 # Step 4: Define the distance threshold for tracking the event
 # This threshold is based on the average beam area of ALMA
+# SPACE RESOLUTION CRITERION 
 distance = (
     np.sqrt(np.mean(processor.beammajor) * np.mean(processor.beamminor))
     / processor.pixel_size_arcsec)
