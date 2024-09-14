@@ -45,13 +45,11 @@ This tracking process is performed both forward and backward in time, starting f
 
 ### Event Tracking and Local Minima Detection
 
-Cold regions were identified based on their lower brightness temperatures, as shown in **panel (c) of Figure 3-3**. To differentiate cold from warm regions, a temperature threshold was set at the mean brightness temperature, including approximately 45% of the pixels (see red line in **panel (a)**).
+Cold regions were identified based on their lower brightness temperatures, as shown in **panel (c) of Figure below**. To differentiate cold from warm regions, a temperature threshold was set at the mean brightness temperature, including approximately 45% of the pixels (see red line in **panel (a)**).
 
 The spatial resolution of ALMA was determined by calculating the average beam area. The radius of a circle with an area equal to the ALMA beam was used to establish a minimum distance between events. This radius is shown by the red line in **panel (b)**.
 
 In **panel (c)**, the blue circle with a 33-arcsec radius encloses the area where cold regions were searched. Events within this area were tracked across frames, while those at the edges of the field of view were excluded.
-
-
 
 ![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/data_select_minimum.jpg)
 
