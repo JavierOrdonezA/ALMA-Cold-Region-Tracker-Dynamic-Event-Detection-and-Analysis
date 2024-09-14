@@ -1,3 +1,4 @@
+# pylint: disable=C0302  # Disabling is a long file.
 """This module handles the preparation, manipulation, and visualization of ALMA data."""
 # Importing necessary core libraries
 import os
@@ -18,22 +19,22 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from scipy import ndimage
 
 __all__ = [
-    'read',
-    'read_header',
-    'stats',
+    "read",
+    "read_header",
+    "stats",
     "plot_histogram",
-    'timeline',
-    'info',
-    'plot_map',
-    'beam_stats',
-    'contrast',
-    'convolve_beam',
-    'beam_kernel_calculator',
-    'prep_data'
+    "timeline",
+    "info",
+    "plot_map",
+    "beam_stats",
+    "contrast",
+    "convolve_beam",
+    "beam_kernel_calculator",
+    "prep_data",
 ]
 
-
 ############################ SALAT READ ############################
+
 
 def read(
     file: str,
@@ -42,14 +43,16 @@ def read(
     timeout: bool = False,
     beamout: bool = False,
     HEADER: bool = True,
-    SILENT: bool = False
-) -> Tuple[np.ndarray,
-           Optional[fits.Header],
-           Optional[np.ndarray],
-           Optional[np.ndarray],
-           Optional[np.ndarray],
-           Optional[np.ndarray],
-           Optional[np.ndarray]]:
+    SILENT: bool = False,
+) -> Tuple[
+    np.ndarray,
+    Optional[fits.Header],
+    Optional[np.ndarray],
+    Optional[np.ndarray],
+    Optional[np.ndarray],
+    Optional[np.ndarray],
+    Optional[np.ndarray],
+]:
     """
     Name: read
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -99,7 +102,7 @@ def read(
 
     # Read the cube data from the FITS file
     cubedata = fits.open(file)  # Open the FITS file
-    sqcube = np.squeeze(cubedata[0].data)  # Remove singleton dimensions
+    sqcube = np.squeeze(cubedata[0].data)  # pylint: disable=no-member
 
     # Initialize lists to store indexes for non-NaN values
     aii_all = []
@@ -125,15 +128,20 @@ def read(
         NaNValue = NaNValue or np.nanmedian(sqcubecrop)
         sqcubecrop[np.isnan(sqcubecrop)] = NaNValue
 
-    hdr0 = cubedata[0].header  # Read the header
+    hdr0 = cubedata[0].header  # pylint: disable=no-member
     timesec, timeutc, beammajor, beamminor, beamangle = None, None, None, None, None
 
+    # pylint: disable=no-member
     if timeout:
         timesec = cubedata[1].data[3] - np.nanmin(cubedata[1].data[3])
-        timeutc = np.array([datetime.strptime(hdr0["DATE-OBS"][:10], "%Y-%m-%d")
-                            + timedelta(seconds=int(item),
-                                        microseconds=int(1e6 * (item % 1)))
-                            for item in cubedata[1].data[3]])
+        timeutc = np.array(
+            [
+                datetime.strptime(hdr0["DATE-OBS"][:10], "%Y-%m-%d")
+                + timedelta(seconds=int(item), microseconds=int(1e6 * (item % 1)))
+                for item in cubedata[1].data[3]
+            ]
+        )
+    # pylint: disable=no-member
 
     if beamout:
         beammajor = list(cubedata[1].data[0] * u.deg.to(u.arcsec))
@@ -152,11 +160,10 @@ def read(
 
 ############################ SALAT READ HEADER ############################
 
+
 def read_header(
-        file: str,
-        ALL: bool = False,
-        ORIGINAL: bool = False,
-        SILENT: bool = False) -> Union[NamedTuple, 'fits.Header']:
+    file: str, ALL: bool = False, ORIGINAL: bool = False, SILENT: bool = False
+) -> Union[NamedTuple, "fits.Header"]:
     """
     Name: read_header
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -184,19 +191,47 @@ def read_header(
         if ALL=True.
     """
     ############### Loading Original Header ################
-    hdr0 = fits.open(file)[0].header
+    hdr0 = fits.open(file)[0].header  # pylint: disable=no-member
 
     ############### Header structure depending on input options ################
     if not ALL:  # If ALL is False, only important tag names are passed to structure
-        important_tags = ['BMAJ', 'BMIN', 'BPA', 'CRVAL1', 'CRVAL2', 'CRVAL3',
-                          'CRVAL1A', 'CRVAL2A', 'RESTFRQ', 'DATE-OBS', 'INSTRUME',
-                          'DATAMIN', 'DATAMAX', 'PROPCODE', 'PWV', 'CDELT1A']
+        important_tags = [
+            "BMAJ",
+            "BMIN",
+            "BPA",
+            "CRVAL1",
+            "CRVAL2",
+            "CRVAL3",
+            "CRVAL1A",
+            "CRVAL2A",
+            "RESTFRQ",
+            "DATE-OBS",
+            "INSTRUME",
+            "DATAMIN",
+            "DATAMAX",
+            "PROPCODE",
+            "PWV",
+            "CDELT1A",
+        ]
 
-        important_tags_meaningful = ['major_beam_mean', 'minor_beam_mean',
-                                     'beam_angle_mean', 'RA', 'Dec', 'Frequency',
-                                     'solarx', 'solary', 'Rest_frequency', 'DATE_OBS',
-                                     'ALMA_Band', 'min_of_datacube', 'max_of_datacube',
-                                     'ALMA_project_id', 'water_vapour', 'pixel_size']
+        important_tags_meaningful = [
+            "major_beam_mean",
+            "minor_beam_mean",
+            "beam_angle_mean",
+            "RA",
+            "Dec",
+            "Frequency",
+            "solarx",
+            "solary",
+            "Rest_frequency",
+            "DATE_OBS",
+            "ALMA_Band",
+            "min_of_datacube",
+            "max_of_datacube",
+            "ALMA_project_id",
+            "water_vapour",
+            "pixel_size",
+        ]
 
         important_tags_values = [hdr0.get(tag) for tag in important_tags]
 
@@ -207,8 +242,9 @@ def read_header(
             header_fields = dict(zip(important_tags_meaningful, important_tags_values))
 
         # Dynamically create a NamedTuple
-        Header = NamedTuple('Header', [(key, type(value))
-                            for key, value in header_fields.items()])
+        Header = NamedTuple(
+            "Header", [(key, type(value)) for key, value in header_fields.items()]
+        )
         header = Header(**header_fields)
 
     else:  # If ALL is True, return the full header
@@ -219,9 +255,9 @@ def read_header(
         print("\n---------------------------------------------------")
         print("------------ SALAT READ HEADER part of ------------")
         print("-- Solar Alma Library of Auxiliary Tools (SALAT) --\n")
-        print(' --------------------------------------------------')
-        print(' |  Selected parameters from the header:')
-        print(' --------------------------------------------------')
+        print(" --------------------------------------------------")
+        print(" |  Selected parameters from the header:")
+        print(" --------------------------------------------------")
         print(f' |  Time of observations: {hdr0["DATE-OBS"]}')
         print(f' |  ALMA Band: {hdr0["INSTRUME"]}')
         print(f' |  ALMA Project ID: {hdr0["PROPCODE"]}')
@@ -233,72 +269,15 @@ def read_header(
         print(f' |  Beam angle (deg): {hdr0["BMAJ"]}')
         print(f' |  Frequency (Hz): {hdr0["CRVAL3"]}')
         print(f' |  Water Vapour (mm): {hdr0["PWV"]}')
-        print(' ---------------------------------------------------\n')
+        print(" ---------------------------------------------------\n")
 
     return header
 
 
 ############################ SALAT STATS ############################
 
-def print_stats(
-        shapedata,
-        mindata,
-        maxdata,
-        meandata,
-        mediandata,
-        modedata,
-        stddata,
-        vardata,
-        skewdata,
-        kurtdata,
-        percentile1,
-        percentile5,
-        SILENT):
-    """Prints the statistics to the terminal."""
-    if not SILENT:
-        print("\n----------------------------------------------")
-        print("|  Statistics: ")
-        print("----------------------------------------------")
-        if len(shapedata) == 2:
-            print(f"|  Array size:  x = {shapedata[1]}  y = {shapedata[0]}")
-        else:
-            print(f"| Array size: t={shapedata[0]} x={shapedata[2]} y={shapedata[1]}")
-        print(f"|  Min = {mindata}")
-        print(f"|  Max = {maxdata}")
-        print(f"|  Mean = {meandata}")
-        print(f"|  Median = {mediandata}")
-        print(f"|  Mode = {modedata}")
-        print(f"|  Standard deviation = {stddata}")
-        print(f"|  Variance = {vardata}")
-        print(f"|  Skew = {skewdata}")
-        print(f"|  Kurtosis = {kurtdata}")
-        print(f"|  Percentile 1 = {percentile1}")
-        print(f"|  Percentile 5 = {percentile5}")
-        print("----------------------------------------------\n")
 
-
-def calculate_basic_stats(almadata):
-    """Calculates basic statistics for ALMA data."""
-    mindata = np.nanmin(almadata)
-    maxdata = np.nanmax(almadata)
-    meandata = np.nanmean(almadata)
-    mediandata = np.nanmedian(almadata)
-    stddata = np.nanstd(almadata)
-    vardata = np.nanvar(almadata)
-    skewdata = float(scpstats.skew(almadata, axis=None, nan_policy='omit'))
-    kurtdata = scpstats.kurtosis(almadata, axis=None, nan_policy='omit')
-    modedata = float(scpstats.mode(almadata, axis=None, nan_policy='omit')[0])
-    percentile1 = np.nanpercentile(almadata, [1, 99])
-    percentile5 = np.nanpercentile(almadata, [5, 95])
-
-    return (mindata, maxdata, meandata, mediandata, stddata, vardata, skewdata,
-            kurtdata, modedata, percentile1, percentile5)
-
-
-def stats(
-        almadata: np.ndarray,
-        Histogram: bool = False,
-        SILENT: bool = False) -> dict:
+def stats(almadata: np.ndarray, Histogram: bool = False, SILENT: bool = False) -> dict:
     """
     Name: stats
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -328,20 +307,51 @@ def stats(
         print("----------------------------------------------")
 
     # Calculate statistics
-    (mindata, maxdata, meandata, mediandata, stddata, vardata, skewdata, kurtdata,
-     modedata, percentile1, percentile5) = calculate_basic_stats(almadata)
+    (
+        mindata,
+        maxdata,
+        meandata,
+        mediandata,
+        stddata,
+        vardata,
+        skewdata,
+        kurtdata,
+        modedata,
+        percentile1,
+        percentile5,
+    ) = calculate_basic_stats(almadata)
 
     # Create a dictionary to store statistics
-    datastats = {"MIN": mindata, "MAX": maxdata, "MEAN": meandata,
-                 "MEDIAN": mediandata,
-                 "MODE": modedata, "STD": stddata, "VAR": vardata,
-                 "SKEW": skewdata,
-                 "KURT": kurtdata, "PERCENTILE1": percentile1,
-                 "PERCENTILE5": percentile5}
+    datastats = {
+        "MIN": mindata,
+        "MAX": maxdata,
+        "MEAN": meandata,
+        "MEDIAN": mediandata,
+        "MODE": modedata,
+        "STD": stddata,
+        "VAR": vardata,
+        "SKEW": skewdata,
+        "KURT": kurtdata,
+        "PERCENTILE1": percentile1,
+        "PERCENTILE5": percentile5,
+    }
 
     # Print statistics if not silent
-    print_stats(np.shape(almadata), mindata, maxdata, meandata, mediandata, modedata,
-                stddata, vardata, skewdata, kurtdata, percentile1, percentile5, SILENT)
+    print_stats(
+        np.shape(almadata),
+        mindata,
+        maxdata,
+        meandata,
+        mediandata,
+        modedata,
+        stddata,
+        vardata,
+        skewdata,
+        kurtdata,
+        percentile1,
+        percentile5,
+        SILENT,
+    )
 
     # Plot histogram if requested
     if Histogram:
@@ -350,9 +360,115 @@ def stats(
     return datastats
 
 
-def plot_histogram(
-        almadata: np.ndarray,
-        mean: float) -> None:
+def calculate_basic_stats(almadata: np.ndarray) -> Tuple:
+    """Helper function to calculate basic statistics for ALMA data.
+
+    Parameters
+    ----------
+    almadata: np.ndarray
+        Data array provided by the user, can be 2D or 3D.
+
+    Returns
+    -------
+    Tuple containing min, max, mean, median, std, var, skew, kurt, mode,
+    percentile1, and percentile5.
+    """
+    mindata = np.nanmin(almadata)  # Minimum value
+    maxdata = np.nanmax(almadata)  # Maximum value
+    meandata = np.nanmean(almadata)  # Mean value
+    mediandata = np.nanmedian(almadata)  # Median value
+    stddata = np.nanstd(almadata)  # Standard deviation
+    vardata = np.nanvar(almadata)  # Variance
+    skewdata = scpstats.skew(almadata, axis=None, nan_policy="omit")  # Skewness
+    kurtdata = scpstats.kurtosis(almadata, axis=None, nan_policy="omit")  # Kurtosis
+    modedata = scpstats.mode(almadata, axis=None, nan_policy="omit").mode[0]  # Mode
+    percentile1 = np.nanpercentile(almadata, 1)  # 1st Percentile
+    percentile5 = np.nanpercentile(almadata, 5)  # 5th Percentile
+
+    return (
+        mindata,
+        maxdata,
+        meandata,
+        mediandata,
+        stddata,
+        vardata,
+        skewdata,
+        kurtdata,
+        modedata,
+        percentile1,
+        percentile5,
+    )
+
+
+def print_stats(
+    shape,
+    mindata,
+    maxdata,
+    meandata,
+    mediandata,
+    modedata,
+    stddata,
+    vardata,
+    skewdata,
+    kurtdata,
+    percentile1,
+    percentile5,
+    SILENT,
+):
+    """Helper function to print stats.
+
+    Parameters
+    ----------
+    shape: tuple
+        Shape of the data array.
+    mindata: float
+        Minimum value in the data.
+    maxdata: float
+        Maximum value in the data.
+    meandata: float
+        Mean value in the data.
+    mediandata: float
+        Median value in the data.
+    modedata: float
+        Mode value in the data.
+    stddata: float
+        Standard deviation of the data.
+    vardata: float
+        Variance of the data.
+    skewdata: float
+        Skewness of the data.
+    kurtdata: float
+        Kurtosis of the data.
+    percentile1: float
+        1st percentile value in the data.
+    percentile5: float
+        5th percentile value in the data.
+    SILENT: bool
+        Whether to suppress terminal output.
+    """
+    if not SILENT:
+        print("\n----------------------------------------------")
+        print("|  Statistics: ")
+        print("----------------------------------------------")
+        if len(shape) == 2:
+            print(f"|  Array size:  x = {shape[1]}  y = {shape[0]}")
+        else:
+            print(f"|  Array size: t = {shape[0]} x = {shape[2]} y = {shape[1]}")
+        print(f"|  Min = {mindata}")
+        print(f"|  Max = {maxdata}")
+        print(f"|  Mean = {meandata}")
+        print(f"|  Median = {mediandata}")
+        print(f"|  Mode = {modedata}")
+        print(f"|  Standard deviation = {stddata}")
+        print(f"|  Variance = {vardata}")
+        print(f"|  Skew = {skewdata}")
+        print(f"|  Kurtosis = {kurtdata}")
+        print(f"|  Percentile 1 = {percentile1}")
+        print(f"|  Percentile 5 = {percentile5}")
+        print("----------------------------------------------\n")
+
+
+def plot_histogram(almadata: np.ndarray, mean: float, std: float) -> None:
     """Plots a histogram of the ALMA data.
 
     Parameters
@@ -361,23 +477,41 @@ def plot_histogram(
         Data array provided by the user, can be 2D or 3D.
     mean: float
         Mean value of the data.
+    std: float
+        Standard deviation of the data (currently unused).
     """
+    # std is not used, but passed for future extension
+    _ = std
+
     flatdata = np.hstack(almadata.copy())  # Flatten the data for histogram
     flatdata = flatdata[~np.isnan(flatdata)]  # Remove NaNs
 
-    _, ax = plt.subplots(figsize=(12, 6))  # Removed fig as it's unused
+    # Only unpack ax from plt.subplots() since fig is not used
+    ax = plt.subplots(figsize=(12, 6))[1]
+
     binwidth = (flatdata.max() - flatdata.min()) / 50  # Histogram bins
     n, bins = np.histogram(flatdata, bins=int(binwidth))
     n = n / n.max()  # Normalize histogram
     bins = bins[:-1]
-    ax.plot(bins, n, color='black', drawstyle='steps-mid')
-    ax.fill_between(bins, n, color='gray', step="mid", alpha=0.4,
-                    label=f'<T$_{{med}}$> = {mean:.0f} K')
-    ax.set_title('Histogram', fontsize=22)
-    ax.set_xlabel('Temperature [K]', fontsize=20)
-    ax.set_ylabel('Normalized frequency', fontsize=20)
+
+    # Plot on the ax object, not on the tuple
+    ax.plot(bins, n, color="black", drawstyle="steps-mid")
+    ax.fill_between(
+        bins,
+        n,
+        color="gray",
+        step="mid",
+        alpha=0.4,
+        label=f"<T$_{{med}}$> = {mean:.0f} K",
+    )  # Using f-string formatting
+
+    # Set title, labels, and other attributes on ax
+    ax.set_title("Histogram", fontsize=22)
+    ax.set_xlabel("Temperature [K]", fontsize=20)
+    ax.set_ylabel("Normalized frequency", fontsize=20)
     ax.legend(fontsize=20, loc=6)
-    ax.tick_params(axis='both', which='major', labelsize=18)
+    ax.tick_params(axis="both", which="major", labelsize=18)
+
     plt.tight_layout()
     plt.show()
 
@@ -386,8 +520,8 @@ def plot_histogram(
 
 
 def timeline(
-        timesec: np.ndarray,
-        gap: float = 30) -> Tuple[Dict[str, list], Dict[str, list]]:
+    timesec: np.ndarray, gap: float = 30
+) -> Tuple[Dict[str, list], Dict[str, list]]:
     """
     Name: timeline
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -464,22 +598,23 @@ def timeline(
 
     # Plot scans
     for key, value in scans_idxs.items():
-        ax.plot((timesec[value[0]], timesec[value[-1]]), (1, 1), 'k')
-        ax.text(timesec[value[0]] + (100 * cadence), 1.02, r'%s' % key, fontsize=20)
+        ax.plot((timesec[value[0]], timesec[value[-1]]), (1, 1), "k")
+        ax.text(timesec[value[0]] + (100 * cadence), 1.02, f"{key}", fontsize=20)
 
     # Plot missing frames
     for key, value in mfram_idxs.items():
-        ax.plot(timesec[value[0]], 1, '|r', ms=15)
-        ax.plot(timesec[value[-1]], 1, '|r', ms=15)
+        ax.plot(timesec[value[0]], 1, "|r", ms=15)
+        ax.plot(timesec[value[-1]], 1, "|r", ms=15)
 
     # Set plot parameters
-    ax.tick_params(axis='both', which='major', labelsize=18)
-    ax.set_title(r'Observation timeline', fontsize=22)
-    ax.set_xlabel(r'Time [s]', fontsize=20)
+    ax.tick_params(axis="both", which="major", labelsize=18)
+    ax.set_title(r"Observation timeline", fontsize=22)
+    ax.set_xlabel(r"Time [s]", fontsize=20)
     plt.tight_layout()
     plt.show()
 
     return scans_idxs, mfram_idxs
+
 
 ############################ SALAT INFO ############################
 
@@ -539,10 +674,17 @@ def info(file: str) -> NoReturn:
 ############################ SALAT PLOT MAP ############################
 
 
-def plot_map(almadata: np.ndarray, beam: List[np.ndarray], pxsize: float,
-             cmap: str = 'hot', average: bool = False, timestp: int = 0,
-             savepng: bool = False, savejpg: bool = False,
-             outputpath: str = "./") -> plt.Figure:
+def plot_map(
+    almadata: np.ndarray,
+    beam: List[np.ndarray],
+    pxsize: float,
+    cmap: str = "hot",
+    average: bool = False,
+    timestp: int = 0,
+    savepng: bool = False,
+    savejpg: bool = False,
+    outputpath: str = "./",
+) -> plt.Figure:
     """
     Name: plot_map
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -617,23 +759,28 @@ def plot_map(almadata: np.ndarray, beam: List[np.ndarray], pxsize: float,
 
     extplot = [-imylen / 2, imylen / 2, -imxlen / 2, imxlen / 2]  # Plot Extent
     fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(12, 10))
-    im1 = ax.imshow(implot, origin='lower', cmap=cmap, extent=extplot)
+    im1 = ax.imshow(implot, origin="lower", cmap=cmap, extent=extplot)
 
     # Adding colorbar
     divider = make_axes_locatable(ax)
-    cax = divider.append_axes('right', size='5%', pad=0.05)
-    cb = fig.colorbar(im1, cax=cax, orientation='vertical')
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    cb = fig.colorbar(im1, cax=cax, orientation="vertical")
 
     # Beam artist to add to plot
     ell_beam = matplotlib.patches.Ellipse(
-        ((-imylen / 2) + 5, (-imxlen / 2) + 5), bmaj, bmin, angle=bang + 90,
-        fc='k', ec='b')
+        ((-imylen / 2) + 5, (-imxlen / 2) + 5),
+        bmaj,
+        bmin,
+        angle=bang + 90,
+        fc="k",
+        ec="b",
+    )
 
     ax.add_patch(ell_beam)
-    ax.tick_params(axis='both', which='major', labelsize=18)
-    ax.set_xlabel('arcsec', fontsize=20)
-    ax.set_ylabel('arcsec', fontsize=20)
-    cb.set_label('Temperature [K]', fontsize=20)
+    ax.tick_params(axis="both", which="major", labelsize=18)
+    ax.set_xlabel("arcsec", fontsize=20)
+    ax.set_ylabel("arcsec", fontsize=20)
+    cb.set_label("Temperature [K]", fontsize=20)
     cb.ax.tick_params(labelsize=18)
     plt.tight_layout()
 
@@ -646,11 +793,17 @@ def plot_map(almadata: np.ndarray, beam: List[np.ndarray], pxsize: float,
 
     return fig
 
+
 ############################ SALAT BEAM STATS ############################
 
 
-def beam_stats(beammajor: np.ndarray, beamminor: np.ndarray, beamangle: np.ndarray,
-               timesec: np.ndarray, plot: bool = False) -> None:
+def beam_stats(
+    beammajor: np.ndarray,
+    beamminor: np.ndarray,
+    beamangle: np.ndarray,
+    timesec: np.ndarray,
+    plot: bool = False,
+) -> None:
     """
     Name: beam_stats
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -718,16 +871,26 @@ def beam_stats(beammajor: np.ndarray, beamminor: np.ndarray, beamangle: np.ndarr
     print("\n----------------------------------------------")
     print("|  Beam Statistics: ")
     print("----------------------------------------------")
-    print(f"|  Min (major, minor, angle, area) = "
-          f"{minbmaj, minbmin, minbang, minbarea}")
-    print(f"|  Max (major, minor, angle, area) = "
-          f"{maxbmaj, maxbmin, maxbang, maxbarea}")
-    print(f"| Mean (major, minor, angle, area) = "
-          f"{meanbmaj, meanbmin, meanbang, meanbarea}")
-    print(f"| Median (major, minor, angle, area) = "
-          f"{medianbmaj, medianbmin, medianbang, medianbarea}")
-    print(f"| Std Dev (major, minor, angle, area) = "
-          f"{stdbmaj, stdbmin, stdbang, stdbarea}")
+    print(
+        f"|  Min (major, minor, angle, area) = "
+        f"{minbmaj, minbmin, minbang, minbarea}"
+    )
+    print(
+        f"|  Max (major, minor, angle, area) = "
+        f"{maxbmaj, maxbmin, maxbang, maxbarea}"
+    )
+    print(
+        f"| Mean (major, minor, angle, area) = "
+        f"{meanbmaj, meanbmin, meanbang, meanbarea}"
+    )
+    print(
+        f"| Median (major, minor, angle, area) = "
+        f"{medianbmaj, medianbmin, medianbang, medianbarea}"
+    )
+    print(
+        f"| Std Dev (major, minor, angle, area) = "
+        f"{stdbmaj, stdbmin, stdbang, stdbarea}"
+    )
     print("----------------------------------------------\n")
 
     ############### Plotting Beam Area ################
@@ -735,20 +898,21 @@ def beam_stats(beammajor: np.ndarray, beamminor: np.ndarray, beamangle: np.ndarr
     if plot:
         # Removed the 'fig' variable as it's unused
         _, ax = plt.subplots(figsize=(12, 6))
-        ax.plot(timesec, beamarea, '.k')
-        ax.set_title('Beam Area', fontsize=21)
-        ax.set_xlabel('Time [s]', fontsize=18)
-        ax.set_ylabel('Area [arcsec$^2$]', fontsize=18)
-        ax.tick_params(axis='both', which='major', labelsize=18)
+        ax.plot(timesec, beamarea, ".k")
+        ax.set_title("Beam Area", fontsize=21)
+        ax.set_xlabel("Time [s]", fontsize=18)
+        ax.set_ylabel("Area [arcsec$^2$]", fontsize=18)
+        ax.tick_params(axis="both", which="major", labelsize=18)
         plt.tight_layout()
         plt.show()
 
 
 ############################ SALAT CONTRAST ############################
 
-
-def contrast(almadata: np.ndarray, timesec: np.ndarray, side: int = 5,
-             show_best: bool = False) -> np.ndarray:
+def contrast(
+    almadata: np.ndarray, timesec: np.ndarray,
+    side: int = 5,
+        show_best: bool = False) -> np.ndarray:
     """
     Name: contrast
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -772,52 +936,33 @@ def contrast(almadata: np.ndarray, timesec: np.ndarray, side: int = 5,
     -------
     bestframes: np.ndarray
         Indexes of the best frames sorted by highest RMS contrast.
-
-    Examples
-    --------
-    >>> import salat
-    >>> bfrs = salat.contrast(almacube, timesec, show_best=True)
-
-    Modification history:
-    ---------------------
-    © Guevara Gómez J.C. (RoCS/SolarALMA), July 2021
     """
-
     print("\n---------------------------------------------------")
     print("------------ SALAT CONTRAST part of -------------")
     print("-- Solar Alma Library of Auxiliary Tools (SALAT) --\n")
 
     ############### Calculate RMS Contrast ################
-
-    # Calculate the mean temperature excluding the edges defined by 'side'
     meanTbr = np.array([np.nanmean(item)
-                        for item in almadata[:, side:-side, side:-side]])
+                       for item in almadata[:, side:-side, side:-side]])
+    rmsCont = np.array([np.nanstd(item) / np.nanmean(item)
+                       for item in almadata[:, side:-side, side:-side]]) * 100
 
-    # Calculate RMS contrast
-    if side > 0:
-        rmsCont = np.array([np.nanstd(item) / np.nanmean(item)
-                            for item in almadata[:, side:-side, side:-side]]) * 100
-    else:
-        rmsCont = np.array([np.nanstd(item) / np.nanmean(item)
-                            for item in almadata]) * 100
-
-    # Find the frames with the highest RMS contrast
     bestframes = np.argsort(rmsCont)[::-1]
 
     ############### Plot Best Frame if Requested ################
-
     if show_best:
-        _, ax = plt.subplots(ncols=1, nrows=2, sharex=True, figsize=(12, 10))
-        ax[0].plot(timesec, meanTbr, '--.k')
-        ax[1].plot(timesec, rmsCont, '--.k')
-        ax[0].tick_params(axis='both', which='major', labelsize=18)
-        ax[1].tick_params(axis='both', which='major', labelsize=18)
-        ax[0].set_title(f'Best frame = {bestframes[0]}', fontsize=24)
-        ax[1].set_xlabel('Time [sec]', fontsize=20)
-        ax[0].set_ylabel('Temperature [K]', fontsize=20)
-        ax[1].set_ylabel('% RMS Contrast', fontsize=20)
-        ax[0].axvline(x=timesec[bestframes[0]], color='red', linestyle=':')
-        ax[1].axvline(x=timesec[bestframes[0]], color='red', linestyle=':')
+        ax = plt.subplots(ncols=1, nrows=2, sharex=True,
+                          figsize=(12, 10))[1]  # Only unpack ax
+        ax[0].plot(timesec, meanTbr, "--.k")
+        ax[1].plot(timesec, rmsCont, "--.k")
+        ax[0].tick_params(axis="both", which="major", labelsize=18)
+        ax[1].tick_params(axis="both", which="major", labelsize=18)
+        ax[0].set_title(f"Best frame = {bestframes[0]}", fontsize=24)
+        ax[1].set_xlabel("Time [sec]", fontsize=20)
+        ax[0].set_ylabel("Temperature [K]", fontsize=20)
+        ax[1].set_ylabel("% RMS Contrast", fontsize=20)
+        ax[0].axvline(x=timesec[bestframes[0]], color="red", linestyle=":")
+        ax[1].axvline(x=timesec[bestframes[0]], color="red", linestyle=":")
         plt.tight_layout()
         plt.show()
 
@@ -827,8 +972,9 @@ def contrast(almadata: np.ndarray, timesec: np.ndarray, side: int = 5,
 ############################ SALAT CONVOLVE BEAM ############################
 
 
-def convolve_beam(data: np.ndarray, beam: list[np.ndarray],
-                  pxsize: float) -> np.ndarray:
+def convolve_beam(
+    data: np.ndarray, beam: list[np.ndarray], pxsize: float
+) -> np.ndarray:
     """
     Name: convolve_beam
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -874,10 +1020,9 @@ def convolve_beam(data: np.ndarray, beam: list[np.ndarray],
     print("------------------------------------------------------")
 
     # Compute the beam kernel using the mean beam parameters
-    beam_kernel = beam_kernel_calculator(np.nanmean(beam[0]),
-                                         np.nanmean(beam[1]),
-                                         np.nanmean(beam[2]),
-                                         pxsize)
+    beam_kernel = beam_kernel_calculator(
+        np.nanmean(beam[0]), np.nanmean(beam[1]), np.nanmean(beam[2]), pxsize
+    )
 
     # Convolve data with beam kernel
     data_convolved = ndimage.convolve(data, beam_kernel)
@@ -885,8 +1030,9 @@ def convolve_beam(data: np.ndarray, beam: list[np.ndarray],
     return data_convolved
 
 
-def beam_kernel_calculator(bmaj_obs: float, bmin_obs: float,
-                           bpan_obs: float, pxsz: float) -> np.ndarray:
+def beam_kernel_calculator(
+    bmaj_obs: float, bmin_obs: float, bpan_obs: float, pxsz: float
+) -> np.ndarray:
     """Calculate the beam kernel array using the observed beam parameters to be used for
     convolving the data.
 
@@ -914,6 +1060,7 @@ def beam_kernel_calculator(bmaj_obs: float, bmin_obs: float,
     beam_kernel = np.asarray(beam.as_kernel(pixscale=pxsz * u.arcsec))
 
     return beam_kernel
+
 
 ############################ SALAT PREP DATA ############################
 
@@ -955,7 +1102,7 @@ def prep_data(file: str, savedir: str = "./") -> str:
     ############### Reading and Reducing the Cube ################
 
     cubedata = fits.open(file)  # Cube data dimensions [t, S, f, x, y]
-    imcube = cubedata[0].data[:, 0, 0, :, :].copy()  # Reduce cube dimensions
+    imcube = cubedata[0].data[:, 0, 0, :, :].copy()  # pylint: disable=no-member
 
     # Generate the output filename
     outfile = os.path.basename(file).replace(".fits", "_modified-dimension.fits")
