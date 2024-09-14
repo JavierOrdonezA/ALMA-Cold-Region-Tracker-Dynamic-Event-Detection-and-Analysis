@@ -104,6 +104,11 @@ all_local_min, total_index = processor.compute_trajectory(
 
 
 
+## Application of the Methods 
+![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/region_alma_iris_1600.jpg)
+![...](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/alma_time_distance_var.jpg)
+
+
 ## Conclusion
 This library allows users to perform detailed tracking of cold regions observed through ALMA by detecting local minima and following events over time. It provides valuable insights into the movement of these regions across frames, aiding in the analysis of dynamic solar events.
 
