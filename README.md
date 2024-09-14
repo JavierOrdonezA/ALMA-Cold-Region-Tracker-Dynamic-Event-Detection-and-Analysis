@@ -30,8 +30,6 @@ The library tracks the event's position by comparing its coordinates across fram
 
 This tracking process is performed both forward and backward in time, starting from the event's frame, ensuring continuous tracking. For example, the library tracks an event from frame 100 to **frame 150** and interrupts the tracking if the distance between the event and the local minima exceeds the threshold in **frame 151**.
 
-**
-
 
 
 
