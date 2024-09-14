@@ -2,6 +2,12 @@
 ## Parse arguments
 set -e
 
+# Add the src directory to PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+
+
+
+
 POSITIONAL=()
 # Set path to CI Scripts as environmental variable
 export CI_SCRIPTS_PATH="ci/scripts"
