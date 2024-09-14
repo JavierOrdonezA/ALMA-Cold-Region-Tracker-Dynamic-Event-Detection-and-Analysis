@@ -91,7 +91,7 @@ all_local_min, total_index = processor.compute_trajectory(
 
 # The result, `all_local_min`, contains the trajectory of the event,
 # and `total_index` contains the corresponding frame indices.
-
+```
 
 ## Results
 
