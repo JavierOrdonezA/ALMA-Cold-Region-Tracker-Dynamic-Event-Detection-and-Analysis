@@ -10,6 +10,26 @@ This library implements a methodology for analyzing cold regions using **ALMA** 
 - **Tracking of cold regions**: Once a local minimum is identified, the library tracks its position across subsequent frames based on distance criteria.
 - **Trajectory extraction**: Generates a vector of coordinates of the event's trajectory over time.
 
+# Methodology Summary
+
+## 1. Event Selection and Frame Identification
+The library begins by selecting an event from the data. Each event is associated with a specific frame in the observational data, from which the analysis starts. For example, in the case of ALMA observations, a particular event is located in **Frame 100**, which corresponds to **UTC 15:54:12 on April 12, 2018**.
+
+## 2. Local Minima Detection
+Using the `peak_local_max` function from the `scikit-image` library, the library identifies all local minima in each frame. The following configuration is used:
+
+- Local minima are found below the average temperature.
+- A minimum distance between two local minima is set to zero.
+
+
+
+
+
+
+
+
+
+
 ## Example Usage
 
 ### Event Tracking and Local Minima Detection
