@@ -24,7 +24,7 @@ Using the `peak_local_max` function from the `scikit-image` library, the library
 - Local minima are found below the average temperature.
 - A minimum distance between two local minima is set to zero.
 
-## 3. Local Minima Detection
+## 3. Tracking of Events
 
 The library tracks the event's position by comparing its coordinates across frames. The distance between the event's position in the current frame and the local minima in the next frame is calculated. If the distance is less than the diameter of a circle whose area is equal to the average beam area of ALMA, the event is considered to persist in the subsequent frame. This process continues until the distance exceeds the threshold.
 
