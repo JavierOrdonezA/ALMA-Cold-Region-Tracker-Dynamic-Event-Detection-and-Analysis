@@ -87,9 +87,6 @@ import numpy as np
 # Initialize the processor with the path to ALMA data
 processor = ALMADataProcessor('/path/to/alma/file.fits')
 
-# Initialize the processor with the ALMA data file
-processor = ALMADataProcessor(file)
-
 # Step 1: Compute the statistics of the ALMA cube
 std_alma_cube = processor.compute_alma_cube_statistics(plot_histogram=False)
 
