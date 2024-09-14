@@ -128,6 +128,10 @@ This method has proven to perform well for studying cold regions observed by **A
 ## Conclusion
 This library allows users to perform detailed tracking of cold regions observed through ALMA by detecting local minima and following events over time. It provides valuable insights into the movement of these regions across frames, aiding in the analysis of dynamic solar events.
 
+However, the method has some limitations, particularly when there is insufficient contrast between local minima in consecutive frames. In some cases, the tracking process halts because a clear local minimum cannot be detected. In other cases, when there is little contrast, the method continues tracking an event across the entire scan, even though local minima are present in the region but may not represent the true event because ALMA cannot resolve them. This issue stems from the relatively low spatial resolution of ALMA.
+
+For more details on these limitations, you can refer to my **Master’s Thesis**, where I provide an in-depth discussion of these challenges. The link to the thesis is provided in the references section. Feel free to check it out! :)
+
 
 ## Future Directions
 Future updates may include an advanced alignment algorithm that considers projection effects, aiming to further refine the precision and applicability of this technique.
