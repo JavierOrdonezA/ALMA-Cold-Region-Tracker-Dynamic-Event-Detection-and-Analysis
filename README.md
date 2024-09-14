@@ -1,4 +1,5 @@
-# ALMA Cold Region Tracker Dynamic Event Detection andAnalysis
+
+# ALMA Cold Region Tracker Dynamic Event Detection and Analysis
 
 ## External Libraries
 
@@ -8,8 +9,7 @@ This project uses an external library file `salat.py`, which is located in the `
 
 1. Ensure you have Python 3.9 or later installed.
 2. Clone this repository.
-3. Install the required packages:
-   ```
+3. Install the required packages:                                                                                                                                  
    pip install -r requirements.txt
    ```
 4. Add the `src` directory to your PYTHONPATH:
