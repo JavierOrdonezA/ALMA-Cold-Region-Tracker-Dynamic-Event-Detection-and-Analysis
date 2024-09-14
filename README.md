@@ -102,9 +102,15 @@ The library's effectiveness is demonstrated in the following time-distance diagr
 
 This figure shows temperature variations in time-distance diagrams for six cold events, centered on the spatial coordinates obtained from the tracking method within a 6x6 arcsec window.
 
-## Detailed Usage
+## Conclusion
 
-For more detailed usage instructions, including advanced features and customization options, please take a look at the [Usage Guide](docs/usage_guide.md).
+This library allows users to perform detailed tracking of cold regions observed through ALMA by detecting local minima and following events over time. It provides valuable insights into the movement of these regions across frames, aiding in the analysis of dynamic solar events.
+
+However, the method has some limitations, particularly when there is insufficient contrast between local minima in consecutive frames. In some cases, the tracking process halts because a clear local minimum cannot be detected. In other cases, when there is little contrast, the method continues tracking an event across the entire scan, even though local minima are present in the region but may not represent the true event because ALMA cannot resolve them. This issue stems from the relatively low spatial resolution of ALMA.
+
+For more details on these limitations, you can refer to my **Master’s Thesis**, where I provide an in-depth discussion of these challenges. The link to the thesis is provided in the references section. Feel free to check it out! :)
+
+
 
 <!---
 ## Examples
@@ -123,7 +129,17 @@ We welcome contributions to the ALMA Cold Region Tracker! Please see our [Contri
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is open source and available under the MIT License. This allows for modification, distribution, and private use.
+
+MIT License
+
+Copyright (c) [2024] [F. J. Ordonez Araujo, J. C Guevara Gomez]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Library"), to deal
+in the Library without restriction, including without limitation the rights
+to use, copy, modify, merge, distribute, and sublicense.
+
 
 ## Citation
 
