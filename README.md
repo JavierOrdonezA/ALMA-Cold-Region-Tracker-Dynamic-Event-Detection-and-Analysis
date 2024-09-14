@@ -99,3 +99,18 @@ all_local_min, total_index = processor.compute_trajectory(
 
 ## Conclusion
 This library allows users to perform detailed tracking of cold regions observed through ALMA by detecting local minima and following events over time. It provides valuable insights into the movement of these regions across frames, aiding in the analysis of dynamic solar events.
+
+
+
+---
+Feel free to explore the projects and their solutions in the respective directories.
+👾 Happy coding! 🥷
+
+**F. J. Ordonez Araujo (fordonezaraujo@gmail.com)**
+
+---
+Thanks For Watching This Repository!
+
+**KEEP AWESOME & STAY COOL!** 😎
+
+Feel Free To Fork And Report If You Find Any Issue :)
