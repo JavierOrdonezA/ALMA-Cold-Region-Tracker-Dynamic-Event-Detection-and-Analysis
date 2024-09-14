@@ -67,3 +67,66 @@ tracked_points = processor.filter_points(vector_minima, frame=100, distance_thre
 
 # Compute the trajectory of the event over time
 all_local_min, total_index = processor.compute_trajectory(tracked_points[0], 100, 5, vector_minima, [0, 200])
+
+
+
+
+
+
+
+
+
+## Example Usage
+
+### Event Tracking and Local Minima Detection
+
+```python
+from alma_processor import ALMADataProcessor
+import numpy as np
+
+# Define the path to the ALMA data
+path_ALMA = '/media/javier/SSD_2/OtrasRegiones/{}'
+file = path_ALMA.format('D06_solaralma.b3.fba.20180412_155228-162441.2017.1.00653.S.level4.k.fits')
+
+# Initialize the processor with the ALMA data file
+processor = ALMADataProcessor(file)
+
+# Step 1: Compute the statistics of the ALMA cube
+std_alma_cube = processor.compute_alma_cube_statistics(plot_histogram=False)
+
+# Step 2: Detect local minima with different settings
+vector_min_0_diameter = processor.detect_local_extrema(
+    sigma_criterion=0, times_radio=0, plot_histogram=False)
+
+vector_min_2_diameter = processor.detect_local_extrema(
+    sigma_criterion=0, times_radio=2, plot_histogram=True)
+
+# Step 3: Choose a specific frame and filter points based on a distance threshold
+frame = 100  # The frame where the event is first identified
+minimum_num = 3  # The index of the specific local minimum to track
+radius_with_search_mininums = 110  # Threshold distance in pixels or arcseconds
+
+points_data_track = processor.filter_points(
+    vector_min_2_diameter,
+    frame=frame,
+    distance_threshold=radius_with_search_mininums,
+    plot_minimums=True)
+
+# Select a specific point from the detected local minima to track
+selected_point = points_data_track[minimum_num].copy()
+
+# Step 4: Define the distance threshold for tracking the event
+# This threshold is based on the average beam area of ALMA
+distance = (
+    np.sqrt(np.mean(processor.beammajor) * np.mean(processor.beamminor))
+    / processor.pixel_size_arcsec)
+
+# Define the range of frames for scanning (start to end)
+scand = [0, processor.almacube.shape[0]]  # Adjust based on the data
+
+# Step 5: Compute the trajectory of the selected event across multiple frames
+all_local_min, total_index = processor.compute_trajectory(
+    selected_point, frame, distance, vector_min_0_diameter, scand)
+
+# The result, `all_local_min`, contains the trajectory of the event,
+# and `total_index` contains the corresponding frame indices.
