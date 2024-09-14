@@ -84,9 +84,8 @@ all_local_min, total_index = processor.compute_trajectory(tracked_points[0], 100
 from alma_processor import ALMADataProcessor
 import numpy as np
 
-# Define the path to the ALMA data
-path_ALMA = '/media/javier/SSD_2/OtrasRegiones/{}'
-file = path_ALMA.format('D06_solaralma.b3.fba.20180412_155228-162441.2017.1.00653.S.level4.k.fits')
+# Initialize the processor with the path to ALMA data
+processor = ALMADataProcessor('/path/to/alma/file.fits')
 
 # Initialize the processor with the ALMA data file
 processor = ALMADataProcessor(file)
