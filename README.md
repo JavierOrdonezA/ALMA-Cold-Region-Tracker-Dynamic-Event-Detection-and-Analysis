@@ -1,31 +1,6 @@
 
 # ALMA Cold Region Tracker Dynamic Event Detection and Analysis
 
-## External Libraries
-
-This project uses an external library file `salat.py`, which is located in the `src/external_libs/` directory. This file is not part of the standard Python libraries and is required for ALMA data processing.
-
-## Setup
-
-1. Ensure you have Python 3.9 or later installed.
-2. Clone this repository.
-3. Install the required packages:                                                                                                                                  
-   pip install -r requirements.txt
-   ```
-4. Add the `src` directory to your PYTHONPATH:
-   ```
-   export PYTHONPATH=$PYTHONPATH:/path/to/your/project/src
-   ```
-
-## Running Tests
-
-To run the tests, use the following command from the project root:
-
-```
-pytest
-```
-
-## CI/CD
-
-The CI/CD pipeline is set up to automatically add the `src` directory to the PYTHONPATH before running tests and linting.
-
+## Overview
+This library implements the methodology described for analyzing cold regions using **ALMA** Band 3 observations.  It is the **first publicly available method** found on the internet that performs this specific task.  The main goal is to track dynamic events (cold regions) by detecting local minima in the ALMA image data and following their movement across frames over time.
+The library processes groups of events by using ALMA observational data to detect and track local minima across frames. This analysis allows users to determine the trajectory of these dynamic events over time and provides detailed information on their movement.
