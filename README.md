@@ -130,7 +130,7 @@ If you use this library in your research, please cite our method article:
 @article{ordonez2024alma,
   title={ALMA Cold Region Tracker: Dynamic Event Detection and Analysis},
   author={Ordonez Araujo, F. J. and Guevara Gomez, J. C.},
-  journal={arXiv preprint arXiv:2404.04401},
+  journal={https://repositorio.unal.edu.co/handle/unal/85838},
   year={2024}
 }
 ```
