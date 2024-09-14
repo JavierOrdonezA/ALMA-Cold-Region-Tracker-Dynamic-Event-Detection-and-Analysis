@@ -91,3 +91,11 @@ all_local_min, total_index = processor.compute_trajectory(
 
 # The result, `all_local_min`, contains the trajectory of the event,
 # and `total_index` contains the corresponding frame indices.
+
+
+## Results
+
+
+
+## Conclusion
+This library allows users to perform detailed tracking of cold regions observed through ALMA by detecting local minima and following events over time. It provides valuable insights into the movement of these regions across frames, aiding in the analysis of dynamic solar events.
