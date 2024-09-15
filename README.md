@@ -6,10 +6,9 @@ The ALMA Cold Region Tracker is a Python library that implements a methodology f
 
 ## Features
 
-- Detection of local minima in ALMA image data frames
-- Tracking of cold regions across subsequent frames
-- Trajectory extraction of events over time
-- Comprehensive analysis of dynamic solar events
+- **Detection of local minima**: The library detects local minima in ALMA image data frames using the `scikit-image` library and its `peak_local_max` function.
+- **Tracking of cold regions**: Once a local minimum is identified, the library tracks its position across subsequent frames based on distance criteria.
+- **Trajectory extraction**: Produces a vector of coordinates representing the event's trajectory across time.
 
 ## Installation
 
@@ -63,7 +62,8 @@ all_local_min, total_index = processor.compute_trajectory(
     selected_point, frame, distance=5, vector_min=vector_min, scand=[0, processor.almacube.shape[0]]
 )
 
-# The result `all_local_min` contains the trajectory of the event
+# The result, `all_local_min`, contains the trajectory of the event,
+# and `total_index` contains the corresponding frame indices.
 ```
 
 ## Methodology
