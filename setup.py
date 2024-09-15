@@ -22,8 +22,11 @@ setup(
     description='A dynamic repository for streamlined Alma tracking.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis',
-    description_thesis= 'https://repositorio.unal.edu.co/handle/unal/85838',  
+    url=(
+        'https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-'
+        'Event-Detection-and-Analysis'
+    ),
+    description_thesis='https://repositorio.unal.edu.co/handle/unal/85838',
     packages=find_packages(),
     install_requires=requirements,
     classifiers=[
