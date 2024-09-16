@@ -48,18 +48,21 @@ processor = ALMADataProcessor('/path/to/alma/file.fits')
 std_alma_cube = processor.compute_alma_cube_statistics()
 
 # Detect local minima
-vector_min = processor.detect_local_extrema(sigma_criterion=0, times_radio=2)
+vector_min = processor.detect_local_extrema(sigma_criterion=0,
+                                            times_radio=2)
 
 # Choose a specific frame and filter points
 frame = 100
-points_data_track = processor.filter_points(vector_min, frame=frame, distance_threshold=110)
+points_data_track = processor.filter_points(vector_min,
+                    frame=frame, distance_threshold=110)
 
 # Select a specific point to track
 selected_point = points_data_track[3].copy()
 
 # Compute the trajectory
 all_local_min, total_index = processor.compute_trajectory(
-    selected_point, frame, distance=5, vector_min=vector_min, scand=[0, processor.almacube.shape[0]]
+    selected_point, frame, distance=5, vector_min=vector_min,
+    scand=[0, processor.almacube.shape[0]]
 )
 
 # The result, `all_local_min`, contains the trajectory of the event,
