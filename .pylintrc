@@ -24,7 +24,8 @@ disable =
     wrong-import-order,
     duplicate-code,
     singleton-comparison,
-    W1514
+    W1514,
+    W0621
 
 [DESIGN]
 # This allows for 10 instance attributes in a class (default is 7).
