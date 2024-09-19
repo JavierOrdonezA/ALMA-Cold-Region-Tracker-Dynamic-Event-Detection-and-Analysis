@@ -1,8 +1,8 @@
 """Module for processing ALMA cube data, including statistical analysis, local extrema
 detection, and coordinate transformations."""
+from typing import Optional, Tuple, List, Union
 import os
 import sys
-from typing import List, Tuple
 
 # Third-party imports
 import matplotlib.pyplot as plt
@@ -40,7 +40,10 @@ class ALMADataProcessor:
         self.pixel_size_arcsec = self.header['CDELT1A']
 
     def _read_alma_file(self) -> Tuple[np.ndarray,
-                                       dict, float, str, float, float, float]:
+                                       dict, np.ndarray,
+                                       Optional[Union[str, np.ndarray]],
+                                       Optional[np.ndarray],
+                                       Optional[np.ndarray], Optional[np.ndarray]]:
         """Reads the ALMA file using the salat module.
 
         Returns:
@@ -63,21 +66,26 @@ class ALMADataProcessor:
             raise ValueError(
                 "ALMA file read resulted in None for one or more expected outputs.")
 
-        # Converting header to dictionary if it's not None and is an instance
-        # of fits.Header
+        # Converting header to dictionary if it's not None and is an
+        # instance of fits.Header
         if header is not None and isinstance(header, fits.Header):
             header_dict = {key: header[key] for key in header.keys()}
         else:
             raise ValueError("Header is either None or not an instance of fits.Header")
 
-        # Convert numerical results to float, ensuring they are not None
-        timesec = float(timesec) if timesec is not None else float('nan')
-        beammajor = float(beammajor) if beammajor is not None else float('nan')
-        beamminor = float(beamminor) if beamminor is not None else float('nan')
-        beamangle = float(beamangle) if beamangle is not None else float('nan')
+        # Ensure timesec is not None (keep it as an array)
+        timesec = np.asarray(timesec)
 
-        return almacube, header_dict, \
-            timesec, str(timeutc), beammajor, beamminor, beamangle
+        # timeutc can be str or ndarray or None, so we ensure it's treated accordingly
+        if isinstance(timeutc, str):
+            timeutc_val = timeutc
+        elif isinstance(timeutc, np.ndarray):
+            timeutc_val = timeutc
+        else:
+            timeutc_val = None
+
+        return almacube, header_dict, timesec, timeutc_val, \
+            beammajor, beamminor, beamangle
 
     def compute_alma_cube_statistics(
             self,
@@ -178,7 +186,7 @@ class ALMADataProcessor:
         """
         _, std_cube_local = self.compute_alma_cube_statistics(plot_histogram)
         dist_threshold_local = times_radio * (
-            np.sqrt(np.mean(self.beammajor) * np.mean(self.beamminor))
+            np.sqrt(np.mean(self.beammajor) * np.mean(self.beamminor))  # type: ignore
             / self.pixel_size_arcsec
         )
 
@@ -229,7 +237,8 @@ class ALMADataProcessor:
             filtered_points (np.ndarray): Filtered points to be plotted.
         """
         plt.figure(figsize=(6, 6))
-        plt.title(f'Frame {frame_idx_local}, {self.timeutc[frame_idx_local]} UTC')
+        plt.title(f'Frame {frame_idx_local}, \
+            {self.timeutc[frame_idx_local]} UTC')  # type: ignore
         plt.imshow(self.almacube[frame_idx_local], origin='lower', cmap='hot')
         plt.scatter(filtered_points[:, 1], filtered_points[:, 0],
                     color='blue', label='Local Minimum detected', s=25)
@@ -357,8 +366,9 @@ if __name__ == "__main__":
     selected_min = tracked_points[min_num].copy()
 
     # Calcular distancia para el seguimiento de trayectoria
-    distance = (np.sqrt(np.mean(processor.beammajor)
-                * np.mean(processor.beamminor)) / processor.pixel_size_arcsec)
+    distance = (np.sqrt(np.mean(processor.beammajor)  # type: ignore
+                * np.mean(
+                    processor.beamminor)) / processor.pixel_size_arcsec)  # type:ignore
     frame_range = (0, processor.almacube.shape[0])  # Asegurándose que es una tupla
 
     # Calcular la trayectoria de puntos seleccionados a través de los frames
