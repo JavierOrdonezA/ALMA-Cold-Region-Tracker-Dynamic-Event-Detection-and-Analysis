@@ -5,8 +5,8 @@ from typing import List, Tuple
 from unittest.mock import patch
 
 # Third-party imports
-import numpy as np  # pylint: disable=unused-import
-import pytest  # pylint: disable=unused-import
+import numpy as np
+import pytest
 
 # Local application imports
 from src.alma_data_processing.alma_data_processing import ALMADataProcessor

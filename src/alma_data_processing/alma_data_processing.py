@@ -1,13 +1,13 @@
-"""Module for processing ALMA cube data, including statistical analysis,
-local extrema detection, and coordinate transformations."""
+"""Module for processing ALMA cube data, including statistical analysis, local extrema
+detection, and coordinate transformations."""
 import os
 import sys
 from typing import List, Tuple
 
 # Third-party imports
-import matplotlib.pyplot as plt  # pylint: disable=unused-import
-import numpy as np  # pylint: disable=unused-import
-from skimage.feature import peak_local_max  # pylint: disable=unused-import
+import matplotlib.pyplot as plt
+import numpy as np
+from skimage.feature import peak_local_max
 
 # Standard library imports
 from src.external_libs import salat
