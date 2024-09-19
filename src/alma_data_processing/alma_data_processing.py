@@ -1,5 +1,5 @@
-"""Module for processing ALMA cube data, including statistical analysis, local extrema
-detection, and coordinate transformations."""
+"""Module for processing ALMA cube data, including statistical analysis,
+local extrema detection, and coordinate transformations."""
 import os
 import sys
 from typing import List, Tuple

@@ -5,18 +5,19 @@ import os
 from datetime import datetime, timedelta
 from typing import Dict, List, NamedTuple, NoReturn, Optional, Tuple, Union
 
-import astropy.units as u
+import astropy.units as u  # pylint: disable=unused-import
 # Importing libraries for plotting and visualization
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
-import radio_beam as rb
-import scipy.stats as scpstats
+import matplotlib  # pylint: disable=unused-import
+import matplotlib.pyplot as plt  # pylint: disable=unused-import
+import numpy as np  # pylint: disable=unused-import
+import radio_beam as rb  # pylint: disable=unused-import
+import scipy.stats as scpstats  # pylint: disable=unused-import
+
 # Importing auxiliary modules
-import tqdm
-from astropy.io import fits
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from scipy import ndimage
+import tqdm  # pylint: disable=unused-import
+from astropy.io import fits  # pylint: disable=unused-import
+from mpl_toolkits.axes_grid1 import make_axes_locatable  # pylint: disable=unused-import
+from scipy import ndimage  # pylint: disable=unused-import
 
 __all__ = [
     "read",
