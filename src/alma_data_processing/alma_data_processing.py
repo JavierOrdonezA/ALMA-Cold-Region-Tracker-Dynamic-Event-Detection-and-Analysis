@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 # Third-party imports
 import matplotlib.pyplot as plt  # pylint: disable=unused-import
-import numpy as np
+import numpy as np  # pylint: disable=unused-import
 from skimage.feature import peak_local_max  # pylint: disable=unused-import
 
 # Standard library imports
