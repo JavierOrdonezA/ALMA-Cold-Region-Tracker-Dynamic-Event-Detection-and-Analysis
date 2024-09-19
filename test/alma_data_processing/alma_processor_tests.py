@@ -1,6 +1,5 @@
 """Test Suite for ALMA Data Processor."""
 from typing import List, Tuple
-
 # Standard library imports
 from unittest.mock import patch
 

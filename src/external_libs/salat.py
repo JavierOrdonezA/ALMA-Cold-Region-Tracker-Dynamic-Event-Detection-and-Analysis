@@ -1,4 +1,6 @@
 # pylint: disable=C0302  # Disabling is a long file.
+# pyright: reportMissingImports=false, reportUndefinedVariable=false
+# pylint: disable=all
 """This module handles the preparation, manipulation, and visualization of ALMA data."""
 # Importing necessary core libraries
 import os
@@ -102,7 +104,7 @@ def read(
 
     # Read the cube data from the FITS file
     cubedata = fits.open(file)  # Open the FITS file
-    sqcube = np.squeeze(cubedata[0].data)  # pylint: disable=no-member
+    sqcube = np.squeeze(cubedata[0].data)  # type: ignore
 
     # Initialize lists to store indexes for non-NaN values
     aii_all = []
@@ -128,25 +130,23 @@ def read(
         NaNValue = NaNValue or np.nanmedian(sqcubecrop)
         sqcubecrop[np.isnan(sqcubecrop)] = NaNValue
 
-    hdr0 = cubedata[0].header  # pylint: disable=no-member
+    hdr0 = cubedata[0].header  # type: ignore
     timesec, timeutc, beammajor, beamminor, beamangle = None, None, None, None, None
 
-    # pylint: disable=no-member
     if timeout:
-        timesec = cubedata[1].data[3] - np.nanmin(cubedata[1].data[3])
+        timesec = cubedata[1].data[3] - np.nanmin(cubedata[1].data[3])  # type: ignore
         timeutc = np.array(
             [
                 datetime.strptime(hdr0["DATE-OBS"][:10], "%Y-%m-%d")
                 + timedelta(seconds=int(item), microseconds=int(1e6 * (item % 1)))
-                for item in cubedata[1].data[3]
+                for item in cubedata[1].data[3]  # type: ignore
             ]
         )
-    # pylint: disable=no-member
 
     if beamout:
-        beammajor = list(cubedata[1].data[0] * u.deg.to(u.arcsec))
-        beamminor = list(cubedata[1].data[1] * u.deg.to(u.arcsec))
-        beamangle = list(cubedata[1].data[2])
+        beammajor = list(cubedata[1].data[0] * u.deg.to(u.arcsec))  # type: ignore
+        beamminor = list(cubedata[1].data[1] * u.deg.to(u.arcsec))  # type: ignore
+        beamangle = list(cubedata[1].data[2])  # type: ignore
 
     if not SILENT:
         info(file)
@@ -155,7 +155,8 @@ def read(
     if not HEADER:
         hdr0 = None
 
-    return sqcubecrop, hdr0, timesec, timeutc, beammajor, beamminor, beamangle
+    return sqcubecrop, hdr0, timesec, timeutc, beammajor, \
+        beamminor, beamangle  # type: ignore
 
 
 ############################ SALAT READ HEADER ############################
@@ -191,7 +192,7 @@ def read_header(
         if ALL=True.
     """
     ############### Loading Original Header ################
-    hdr0 = fits.open(file)[0].header  # pylint: disable=no-member
+    hdr0 = fits.open(file)[0].header  # type: ignore
 
     ############### Header structure depending on input options ################
     if not ALL:  # If ALL is False, only important tag names are passed to structure
@@ -243,7 +244,8 @@ def read_header(
 
         # Dynamically create a NamedTuple
         Header = NamedTuple(
-            "Header", [(key, type(value)) for key, value in header_fields.items()]
+            "Header", [(key, type(value))
+                       for key, value in header_fields.items()]  # type: ignore
         )
         header = Header(**header_fields)
 
@@ -379,9 +381,10 @@ def calculate_basic_stats(almadata: np.ndarray) -> Tuple:
     mediandata = np.nanmedian(almadata)  # Median value
     stddata = np.nanstd(almadata)  # Standard deviation
     vardata = np.nanvar(almadata)  # Variance
-    skewdata = scpstats.skew(almadata, axis=None, nan_policy="omit")  # Skewness
-    kurtdata = scpstats.kurtosis(almadata, axis=None, nan_policy="omit")  # Kurtosis
-    modedata = scpstats.mode(almadata, axis=None, nan_policy="omit").mode[0]  # Mode
+    skewdata = scpstats.skew(almadata, axis=None, nan_policy="omit")  # type: ignore
+    kurtdata = scpstats.kurtosis(almadata, axis=None, nan_policy="omit")  # type: ignore
+    modedata = scpstats.mode(
+        almadata, axis=None, nan_policy="omit").mode[0]  # type: ignore
     percentile1 = np.nanpercentile(almadata, 1)  # 1st Percentile
     percentile5 = np.nanpercentile(almadata, 5)  # 5th Percentile
 
@@ -483,7 +486,7 @@ def plot_histogram(almadata: np.ndarray, mean: float, std: float) -> None:
     # std is not used, but passed for future extension
     _ = std
 
-    flatdata = np.hstack(almadata.copy())  # Flatten the data for histogram
+    flatdata = np.hstack(almadata.copy())  # type: ignore
     flatdata = flatdata[~np.isnan(flatdata)]  # Remove NaNs
 
     # Only unpack ax from plt.subplots() since fig is not used
@@ -618,8 +621,7 @@ def timeline(
 
 ############################ SALAT INFO ############################
 
-
-def info(file: str) -> NoReturn:
+def info(file: str) -> NoReturn:  # type: ignore
     """
     Name: info
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -652,22 +654,46 @@ def info(file: str) -> NoReturn:
     ############### Reading Header ################
     hdr0 = read_header(file, ALL=True, SILENT=True)
 
+    # Ensure hdr0 is not None before proceeding
+    if hdr0 is None:
+        print("Error: Header is missing or could not be read.")
+
+    # Safely access header fields; checking if they exist first
+    alma_band = int(hdr0.get('INSTRUME', 'N/A')  # type: ignore
+                    [-1]) if 'INSTRUME' in hdr0 else 'N/A'  # type: ignore
+    obs_date = hdr0.get(  # type: ignore
+        'DATE-OBS', 'Unknown')[:10] if 'DATE-OBS' in hdr0 else 'Unknown'  # type: ignore
+    alma_proj = hdr0.get(  # type: ignore
+        'PROPCODE', 'Unknown') if 'PROPCODE' in hdr0 else 'Unknown'  # type: ignore
+    pix_unit = hdr0.get(  # type: ignore
+        'BUNIT', 'Unknown') if 'BUNIT' in hdr0 else 'Unknown'  # type: ignore
+    pix_size = hdr0.get(  # type: ignore
+        'CDELT1A', 'Unknown') if 'CDELT1A' in hdr0 else 'Unknown'  # type: ignore
+    beam_mean = float(hdr0.get('SPATRES', 0)  # type: ignore
+                      ) if 'SPATRES' in hdr0 else 'N/A'  # type: ignore
+    fov_diam = hdr0.get(  # type: ignore
+        'EFFDIAM', 'Unknown') if 'EFFDIAM' in hdr0 else 'Unknown'  # type: ignore
+    data_min = hdr0.get(  # type: ignore
+        'DATAMIN', 'Unknown') if 'DATAMIN' in hdr0 else 'Unknown'  # type: ignore
+    data_max = hdr0.get(  # type: ignore
+        'DATAMAX', 'Unknown') if 'DATAMAX' in hdr0 else 'Unknown'  # type: ignore
+
     ############### Printing Information in Terminal ################
     print("\n----------------------------------------------")
     print("| Data feat.: ")
     print("----------------------------------------------")
-    print(f"|  ALMA BAND: {int(hdr0['INSTRUME'][-1])}")
-    print(f"|  Obs. Date: {hdr0['DATE-OBS'][:10]}")
-    print(f"|  ALMA proj: {hdr0['PROPCODE']}")
-    print(f"|  Pix. Unit: {hdr0['BUNIT']}")
-    print(f"|  Pix. Size: {hdr0['CDELT1A']} arcsec.")
-    print(f"|  Beam mean: {float(hdr0['SPATRES'])} arcsec")
-    print(f"|  FOV. diam: {hdr0['EFFDIAM']}")
+    print(f"|  ALMA BAND: {alma_band}")
+    print(f"|  Obs. Date: {obs_date}")
+    print(f"|  ALMA proj: {alma_proj}")
+    print(f"|  Pix. Unit: {pix_unit}")
+    print(f"|  Pix. Size: {pix_size} arcsec.")
+    print(f"|  Beam mean: {beam_mean} arcsec")
+    print(f"|  FOV. diam: {fov_diam}")
     print("----------------------------------------------")
     print("| Data range ")
     print("----------------------------------------------")
-    print(f"|  Min = {hdr0['DATAMIN']} Kelvin")
-    print(f"|  Max = {hdr0['DATAMAX']} Kelvin")
+    print(f"|  Min = {data_min} Kelvin")
+    print(f"|  Max = {data_max} Kelvin")
     print("----------------------------------------------\n")
 
 
@@ -684,7 +710,7 @@ def plot_map(
     savepng: bool = False,
     savejpg: bool = False,
     outputpath: str = "./",
-) -> plt.Figure:
+) -> plt.Figure:  # type: ignore
     """
     Name: plot_map
         part of -- Solar Alma Library of Auxiliary Tools (SALAT) --
@@ -767,7 +793,7 @@ def plot_map(
     cb = fig.colorbar(im1, cax=cax, orientation="vertical")
 
     # Beam artist to add to plot
-    ell_beam = matplotlib.patches.Ellipse(
+    ell_beam = matplotlib.patches.Ellipse(  # type: ignore
         ((-imylen / 2) + 5, (-imxlen / 2) + 5),
         bmaj,
         bmin,
@@ -1021,7 +1047,8 @@ def convolve_beam(
 
     # Compute the beam kernel using the mean beam parameters
     beam_kernel = beam_kernel_calculator(
-        np.nanmean(beam[0]), np.nanmean(beam[1]), np.nanmean(beam[2]), pxsize
+        np.nanmean(beam[0]), np.nanmean(beam[1]), np.nanmean(  # type: ignore
+            beam[2]), pxsize  # type: ignore
     )
 
     # Convolve data with beam kernel
@@ -1054,10 +1081,11 @@ def beam_kernel_calculator(
     """
 
     # Create beam using observed parameters
-    beam = rb.Beam(bmaj_obs * u.arcsec, bmin_obs * u.arcsec, bpan_obs * u.deg)
+    beam = rb.Beam(bmaj_obs * u.arcsec, bmin_obs * u.arcsec,  # type: ignore
+                   bpan_obs * u.deg)  # type: ignore
 
     # Convert beam to kernel with the given pixel scale
-    beam_kernel = np.asarray(beam.as_kernel(pixscale=pxsz * u.arcsec))
+    beam_kernel = np.asarray(beam.as_kernel(pixscale=pxsz * u.arcsec))  # type: ignore
 
     return beam_kernel
 
@@ -1102,8 +1130,7 @@ def prep_data(file: str, savedir: str = "./") -> str:
     ############### Reading and Reducing the Cube ################
 
     cubedata = fits.open(file)  # Cube data dimensions [t, S, f, x, y]
-    imcube = cubedata[0].data[:, 0, 0, :, :].copy()  # pylint: disable=no-member
-
+    imcube = cubedata[0].data[:, 0, 0, :, :].copy()  # type: ignore
     # Generate the output filename
     outfile = os.path.basename(file).replace(".fits", "_modified-dimension.fits")
 

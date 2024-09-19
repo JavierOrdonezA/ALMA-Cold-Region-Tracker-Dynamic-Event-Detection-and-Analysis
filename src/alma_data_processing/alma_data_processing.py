@@ -7,6 +7,7 @@ from typing import List, Tuple
 # Third-party imports
 import matplotlib.pyplot as plt
 import numpy as np
+from astropy.io import fits
 from skimage.feature import peak_local_max
 
 # Standard library imports
@@ -38,14 +39,14 @@ class ALMADataProcessor:
         # Retrieve pixel size in arcseconds from the header
         self.pixel_size_arcsec = self.header['CDELT1A']
 
-    def _read_alma_file(
-            self) -> Tuple[np.ndarray, dict, float, str, float, float, float]:
+    def _read_alma_file(self) -> Tuple[np.ndarray,
+                                       dict, float, str, float, float, float]:
         """Reads the ALMA file using the salat module.
 
         Returns:
             tuple: Contains the ALMA cube, header, and other metadata.
         """
-        return salat.read(
+        result = salat.read(
             self.file_path,
             timeout=True,
             beamout=True,
@@ -54,9 +55,33 @@ class ALMADataProcessor:
             fillNan=True
         )
 
+        # Unpacking results while checking for None values
+        almacube, header, timesec, timeutc, beammajor, beamminor, beamangle = result
+
+        if almacube is None or any(x is None for x in [timesec, beammajor,
+                                                       beamminor, beamangle]):
+            raise ValueError(
+                "ALMA file read resulted in None for one or more expected outputs.")
+
+        # Converting header to dictionary if it's not None and is an instance
+        # of fits.Header
+        if header is not None and isinstance(header, fits.Header):
+            header_dict = {key: header[key] for key in header.keys()}
+        else:
+            raise ValueError("Header is either None or not an instance of fits.Header")
+
+        # Convert numerical results to float, ensuring they are not None
+        timesec = float(timesec) if timesec is not None else float('nan')
+        beammajor = float(beammajor) if beammajor is not None else float('nan')
+        beamminor = float(beamminor) if beamminor is not None else float('nan')
+        beamangle = float(beamangle) if beamangle is not None else float('nan')
+
+        return almacube, header_dict, \
+            timesec, str(timeutc), beammajor, beamminor, beamangle
+
     def compute_alma_cube_statistics(
-            self, plot_histogram: bool = False
-    ) -> Tuple[float, float]:
+            self,
+            plot_histogram: bool = False) -> Tuple[float, float]:
         """Calculates statistics (mean and standard deviation) of the ALMA cube.
 
         Args:
@@ -66,18 +91,17 @@ class ALMADataProcessor:
         Returns:
             tuple: Mean and standard deviation of the ALMA cube data.
         """
-        alma_flatten = [
-            np.delete(img.flatten(), np.where(img.flatten() == img[0][0]))
-            for img in self.almacube
-        ]
+        alma_flatten = [np.nan_to_num(img.flatten()) for img in self.almacube]
         flatten_all_alma = np.concatenate(alma_flatten)
-        std_cube = np.std(flatten_all_alma)
-        mean_cube = np.mean(flatten_all_alma)
+
+        # Calculate standard deviation and mean ensuring no NaNs are involved
+        std_cube = np.std(flatten_all_alma, where=~np.isnan(flatten_all_alma))
+        mean_cube = np.mean(flatten_all_alma, where=~np.isnan(flatten_all_alma))
 
         if plot_histogram:
-            self._plot_histogram(flatten_all_alma, mean_cube, std_cube)
+            self._plot_histogram(flatten_all_alma, float(mean_cube), float(std_cube))
 
-        return mean_cube, std_cube
+        return float(mean_cube), float(std_cube)
 
     def _plot_histogram(self, data: np.ndarray, mean: float, std: float) -> None:
         """Plots a histogram of the data with lines indicating the mean and various
@@ -265,11 +289,14 @@ class ALMADataProcessor:
                 nodes (np.ndarray): Array of points to search.
 
             Returns:
-                tuple: Index of the closest node and the distance to it.
+                tuple: Index of the closest node (as an int) and the distance to it
+                (as a float).
             """
             nodes = np.asarray(nodes)
             dist_2 = np.sum((nodes - node) ** 2, axis=1)
-            return np.argmin(dist_2), np.sqrt(min(dist_2))
+            min_dist_idx = int(np.argmin(dist_2))  # Cast to int explicitly
+            min_dist = np.sqrt(dist_2[min_dist_idx])
+            return min_dist_idx, min_dist
 
         curr_point = sel_point_local.copy()
         backward_points, backward_idx = [], []
@@ -308,14 +335,16 @@ if __name__ == "__main__":
 
     processor = ALMADataProcessor(file)
 
-    # Renaming 'std_cube' to 'alma_std_cube' to avoid shadowing
+    # Calcular estadísticas del cubo ALMA sin plotear el histograma
     alma_std_cube = processor.compute_alma_cube_statistics(plot_histogram=False)
 
+    # Detectar extremos locales con distintos parámetros
     min_0_diameter = processor.detect_local_extrema(
         sigma_criterion=0, times_radio=0, plot_histogram=False)
     min_2_diameter = processor.detect_local_extrema(
         sigma_criterion=0, times_radio=2, plot_histogram=True)
 
+    # Selección de parámetros para filtrar y rastrear puntos
     frame_idx = 100
     min_num = 5
     search_radius = 110
@@ -327,12 +356,11 @@ if __name__ == "__main__":
 
     selected_min = tracked_points[min_num].copy()
 
-    distance = (
-        np.sqrt(np.mean(processor.beammajor) * np.mean(processor.beamminor))
-        / processor.pixel_size_arcsec)
+    # Calcular distancia para el seguimiento de trayectoria
+    distance = (np.sqrt(np.mean(processor.beammajor)
+                * np.mean(processor.beamminor)) / processor.pixel_size_arcsec)
+    frame_range = (0, processor.almacube.shape[0])  # Asegurándose que es una tupla
 
-    frame_range = [0, processor.almacube.shape[0]]
-
-    # Renaming 'all_minima' and 'all_idx' to avoid shadowing
+    # Calcular la trayectoria de puntos seleccionados a través de los frames
     tracked_minima, tracked_idx = processor.compute_trajectory(
         selected_min, frame_idx, distance, min_0_diameter, frame_range)
