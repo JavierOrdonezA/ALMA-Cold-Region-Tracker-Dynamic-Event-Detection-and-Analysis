@@ -39,7 +39,7 @@ pip install -e .
 Here's a basic example of how to use the ALMA Cold Region Tracker:
 
 ```python
-from alma_processor import ALMADataProcessor
+from AlmaTracking import ALMADataProcessor
 
 # Initialize the processor with the path to ALMA data
 processor = ALMADataProcessor('/path/to/alma/file.fits')
@@ -81,7 +81,7 @@ The ALMA Cold Region Tracker uses a multi-step process to detect and track cold 
 
 The following image illustrates the process of identifying and tracking cold regions:
 
-![Method Explanation](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/data_select_minimum.jpg)
+![Method Explanation](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/Results_and_Application/Image_Condiction.png)
 
 - **Panel (a)**: Shows the temperature threshold (red line) set at the mean brightness temperature.
 - **Panel (b)**: The red line indicates the minimum distance between events, based on ALMA's spatial resolution.
@@ -91,7 +91,7 @@ The following image illustrates the process of identifying and tracking cold reg
 
 This figure demonstrates the temporal evolution of a dynamic cold region:
 
-![Tracking Example](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/example_tracking.jpg)
+![Tracking Example](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/Results_and_Application/Tracking.png)
 
 - The green star marks the tracked event in frame 100 (UTC 15:54:12 on April 12, 2018).
 - Panels t1 and t2 show moments before the event, while t4 and t5 show moments after.
@@ -101,7 +101,7 @@ This figure demonstrates the temporal evolution of a dynamic cold region:
 
 The library's effectiveness is demonstrated in the following time-distance diagram:
 
-![Time-Distance Diagram](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/example_how_to_use/alma_time_distance_var.jpg)
+![Time-Distance Diagram](https://github.com/JavierOrdonezA/ALMA-Cold-Region-Tracker-Dynamic-Event-Detection-and-Analysis/blob/main/Results_and_Application/Time-distance-diagram.png)
 
 This figure shows temperature variations in time-distance diagrams for six cold events, centered on the spatial coordinates obtained from the tracking method within a 6x6 arcsec window.
 
